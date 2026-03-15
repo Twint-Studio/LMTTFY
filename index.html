@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./library.css">
+	<link rel="stylesheet" href="./style.css">
+	<link rel="icon" href="./favicon.png">
+	<title>Let me Twint that for you!</title>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Let me Twint that for you!</h1>
+
+        <div class="group">
+            <input type="text" id="input" placeholder="Type your query..." autofocus>
+            <div class="group">
+                <button class="button button-primary" id="copy">Copy</button>
+                <button class="button button-secondary" id="preview">Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const preview = document.getElementById("preview");
+        const input = document.getElementById("input");
+        const copy = document.getElementById("copy");
+
+        const param = new URLSearchParams(location.search).get("q");
+        if (param) {
+            copy.textContent = "Search";
+
+            preview.style.display = "none";
+
+            let query = decodeURIComponent(param);
+            input.value = "";
+
+            const cursor = document.createElement("img");
+            cursor.src = "./cursor.png";
+            cursor.style.position = "fixed";
+            cursor.style.pointerEvents = "none";
+            cursor.style.zIndex = "9999";
+            cursor.style.transition = "all 1s ease-in-out";
+            document.body.appendChild(cursor);
+
+            const inputRect = input.getBoundingClientRect();
+
+            cursor.style.left = "10px";
+            cursor.style.top = "10px";
+
+            setTimeout(() => {
+                cursor.style.left = `${inputRect.left + 10}px`;
+                cursor.style.top = `${inputRect.top + 10}px`;
+            }, 100);
+
+            setTimeout(() => {
+                const interval = setInterval(() => {
+                    if (query !== "") {
+                        input.value += query[0];
+                        query = query.slice(1);
+                    } else {
+                        clearInterval(interval);
+
+                        const copyRect = copy.getBoundingClientRect();
+                        cursor.style.left = `${copyRect.left + copyRect.width / 2}px`;
+                        cursor.style.top = `${copyRect.top + copyRect.height / 2}px`;
+
+                        setTimeout(() => {
+                            copy.style.transform = "scale(0.95)";
+                            setTimeout(() => {
+                                copy.style.transform = "scale(1)";
+                                setTimeout(() => {
+                                    cursor.remove();
+                                    location.href = `https://search.twint.my.id/s?q=${encodeURIComponent(input.value)}`;
+                                }, 300);
+                            }, 200);
+                        }, 1200);
+                    }
+                }, 125);
+            }, 1100);
+        } else {
+            copy.addEventListener("click", () => {
+                const q = input.value;
+                navigator.clipboard.writeText(`${location.origin}${location.pathname}?q=${encodeURIComponent(q)}`);
+
+                copy.textContent = "Copied!";
+                setTimeout(() => {
+                    copy.textContent = "Copy";
+                }, 2000);
+            });
+
+            preview.addEventListener("click", () => {
+                const q = input.value;
+                window.location.href = `${location.origin}${location.pathname}?q=${encodeURIComponent(q)}`;
+            });
+        }
+    </script>
+
+</body>
+</html>
