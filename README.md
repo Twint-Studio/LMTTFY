@@ -1,3 +1,3 @@
 # Let me Twint that for you!
 
-![screenshot](https://api.serversmp.xyz/upload/69b6b7934403d8f0dd63c7f4.jpg)
+![showcase](https://api.serversmp.xyz/upload/69b72151dbceb9d8e133ddf9.gif)
