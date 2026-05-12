@@ -72,7 +72,11 @@
                                 copy.style.transform = "scale(1)";
                                 setTimeout(() => {
                                     cursor.remove();
-                                    location.href = `https://search.twint.my.id/s?q=${encodeURIComponent(input.value)}`;
+                                    const query = encodeURIComponent(input.value);
+
+                                    fetch("https://search.twint.my.id", { method: "HEAD", mode: "no-cors" })
+                                        .then(() => location.href = `https://search.twint.my.id/s?q=${query}`)
+                                        .catch(() => location.href = `https://search.twint.us.kg/s?q=${query}`);
                                 }, 300);
                             }, 200);
                         }, 1200);
